@@ -141,6 +141,15 @@
       .result { position: static; }
       footer .wrap { flex-direction: column; }
     }
+    @media (max-width: 520px) {
+      .wrap { padding: 0 16px; }
+      .nav { gap: 10px; }
+      .brand { min-width: 0; gap: 10px; }
+      .mark { width: 36px; height: 36px; flex: 0 0 36px; }
+      .brand strong { font-size: 16px; }
+      .brand > span > span { display: none; }
+      .button.green { height: 42px; padding: 0 14px; }
+    }
   </style>
 </head>
 <body>
