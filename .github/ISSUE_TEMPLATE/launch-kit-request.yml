@@ -1,0 +1,62 @@
+name: RailsReady Launch Kit request
+description: Public-safe purchase or access request for the RailsReady Launch Kit.
+title: "[RailsReady request]: "
+labels:
+  - railsready-request
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your interest in RailsReady.
+
+        This issue is public. Do not include private keys, seed phrases, wallet signatures, passwords, browser cookies, customer PII, bank statements, confidential contracts, production transaction data, or sensitive commercial terms.
+  - type: dropdown
+    id: tier
+    attributes:
+      label: Product tier
+      options:
+        - Launch Kit ($149)
+        - Operator Pack ($499)
+        - Blueprint License ($1,499)
+        - Not sure yet
+    validations:
+      required: true
+  - type: dropdown
+    id: flow
+    attributes:
+      label: Stablecoin flow
+      options:
+        - Checkout
+        - Account top-up
+        - Settlement
+        - Payout
+        - Off-ramp
+        - Other / mixed
+    validations:
+      required: true
+  - type: input
+    id: provider
+    attributes:
+      label: Provider shortlist
+      description: Public-safe provider names only, if known.
+      placeholder: Stripe, Circle, Bridge, Coinbase, BVNK, HashKey, OSL, regional provider...
+  - type: input
+    id: timeline
+    attributes:
+      label: Pilot timeline
+      placeholder: e.g. exploring now, 30 days, this quarter
+  - type: textarea
+    id: concern
+    attributes:
+      label: Main launch concern
+      description: Keep this public-safe.
+      placeholder: custody boundary, provider DD, reconciliation, exception handling, support wording, legal review...
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Public safety confirmation
+      options:
+        - label: I did not include confidential data, customer data, private keys, wallet secrets, passwords, or production transaction details.
+          required: true
