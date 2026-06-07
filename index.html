@@ -125,6 +125,9 @@
     .kit-card { border: 1px solid #334155; background: #0f172a; border-radius: 8px; padding: 20px; }
     .kit-card strong { color: #a7f3d0; display: block; margin-bottom: 10px; }
     .prices { grid-template-columns: repeat(4, 1fr); margin-top: 30px; }
+    .guides { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 28px; }
+    .guide { border: 1px solid var(--line); background: white; border-radius: 8px; padding: 18px; }
+    .guide strong { display: block; font-size: 18px; margin-bottom: 10px; }
     .price { padding: 20px; display: flex; min-height: 280px; flex-direction: column; background: #f8fafc; }
     .price b { font-size: 30px; display: block; margin: 10px 0 12px; }
     .price p { flex: 1; color: var(--muted); }
@@ -138,7 +141,7 @@
       .hero-grid, .score-grid, .kit-grid, .proof-grid { grid-template-columns: 1fr; }
       h1 { font-size: 40px; }
       h2 { font-size: 30px; }
-      .benefits, .prices, .kit-cards, .source-grid { grid-template-columns: 1fr; }
+      .benefits, .prices, .guides, .kit-cards, .source-grid { grid-template-columns: 1fr; }
       .result { position: static; }
       footer .wrap { flex-direction: column; }
     }
@@ -204,6 +207,16 @@
           <p class="kit-card"><strong>Top-up flow blueprint</strong>Specify payment intents, provider addresses, webhooks, exceptions, and ledger entries.</p>
           <p class="kit-card"><strong>Provider DD checklist</strong>Compare providers with the same evidence checklist.</p>
           <p class="kit-card"><strong>Pilot gate scorecard</strong>Turn enthusiasm into a launch/no-launch decision.</p>
+        </div>
+      </div>
+    </section>
+    <section id="guides">
+      <div class="wrap">
+        <div class="section-title"><p>Launch playbooks</p><h2>Search-friendly operating guides for stablecoin payment pilots.</h2><p class="muted" style="margin-top:16px">Each guide maps to a real buyer question: how to reconcile payments, how to evaluate providers, and how to write customer-facing checkout copy without overclaiming.</p></div>
+        <div class="guides">
+          <a class="guide" href="stablecoin-payment-reconciliation.html"><strong>Stablecoin payment reconciliation checklist</strong><span class="muted">Four-way matching across payment intent, chain transaction, provider order, and ledger.</span></a>
+          <a class="guide" href="stablecoin-provider-due-diligence.html"><strong>Stablecoin payment provider due diligence</strong><span class="muted">Questions to ask before choosing a checkout, top-up, or off-ramp provider.</span></a>
+          <a class="guide" href="stablecoin-checkout-compliance-wording.html"><strong>Stablecoin checkout compliance wording</strong><span class="muted">Safer customer wording for chains, tokens, refunds, review, and settlement timing.</span></a>
         </div>
       </div>
     </section>

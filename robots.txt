@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://copyboy.github.io/railsready-stablecoin-launch-kit-site/sitemap.xml
