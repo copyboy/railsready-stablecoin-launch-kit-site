@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RailsReady | Stablecoin Payment Launch Kit</title>
+  <meta name="description" content="Stablecoin payment launch-readiness scorecard and template kit for payment teams evaluating USDC/USDT rails." />
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --ink: #0f172a;
+      --muted: #485569;
+      --line: #dbe3ee;
+      --panel: #ffffff;
+      --soft: #f1f5f9;
+      --green: #059669;
+      --green-soft: #ecfdf5;
+      --blue: #2563eb;
+      --amber: #b45309;
+      --red: #b91c1c;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255,255,255,.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .mark { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 8px; background: #020617; color: white; font-weight: 700; }
+    .brand strong, .brand span { display: block; }
+    .brand span { color: #64748b; font-size: 13px; }
+    nav { display: flex; gap: 26px; color: #334155; font-size: 14px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 42px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      padding: 0 18px;
+      font-weight: 700;
+      background: #020617;
+      color: white;
+      cursor: pointer;
+    }
+    .button.secondary { background: white; color: #0f172a; border-color: #cbd5e1; }
+    .button.green { background: var(--green); }
+    .hero { padding: 56px 0; border-bottom: 1px solid var(--line); }
+    .hero-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: 36px; align-items: center; }
+    .eyebrow {
+      display: inline-flex;
+      border: 1px solid #a7f3d0;
+      background: var(--green-soft);
+      color: #047857;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 700;
+      margin-bottom: 26px;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 46px; line-height: 1.08; max-width: 650px; }
+    .lead { margin-top: 22px; color: var(--muted); font-size: 18px; line-height: 1.8; max-width: 650px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 34px; }
+    .benefit, .card, .price, .source {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+    }
+    .benefit { padding: 16px; color: #334155; }
+    .benefit strong { display: block; color: var(--ink); margin-bottom: 4px; }
+    .visual { border: 1px solid var(--line); background: white; border-radius: 8px; padding: 12px; box-shadow: 0 1px 5px rgba(15, 23, 42, .09); }
+    .visual img { width: 100%; height: auto; display: block; border-radius: 6px; }
+    section { padding: 56px 0; }
+    .section-title { max-width: 680px; }
+    .section-title p:first-child { color: #047857; font-weight: 700; margin-bottom: 10px; }
+    h2 { font-size: 34px; line-height: 1.16; }
+    .muted { color: var(--muted); line-height: 1.8; }
+    .score-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 32px; align-items: start; }
+    .questions { margin-top: 28px; display: grid; gap: 14px; }
+    .card { background: var(--soft); padding: 18px; }
+    .card h3 { font-size: 17px; line-height: 1.35; margin-bottom: 10px; }
+    .choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 18px; }
+    .choice {
+      height: 42px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: #334155;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .choice.active { background: #020617; border-color: #020617; color: white; }
+    .result { position: sticky; top: 84px; border: 1px solid var(--line); background: white; border-radius: 8px; padding: 22px; box-shadow: 0 1px 5px rgba(15, 23, 42, .08); }
+    .score-row { display: flex; justify-content: space-between; align-items: start; }
+    .score { font-size: 54px; font-weight: 800; margin-top: 4px; }
+    .bar { height: 10px; overflow: hidden; border-radius: 8px; background: #e2e8f0; margin: 16px 0 24px; }
+    .fill { height: 100%; width: 0; background: var(--green); border-radius: 8px; transition: width 180ms ease; }
+    .tone-red { color: var(--red); }
+    .tone-amber { color: var(--amber); }
+    .tone-blue { color: var(--blue); }
+    .tone-green { color: #047857; }
+    ol { margin: 12px 0 0; padding-left: 20px; color: var(--muted); line-height: 1.8; }
+    .dark { background: #020617; color: white; }
+    .dark .muted { color: #cbd5e1; }
+    .kit-grid { display: grid; grid-template-columns: .78fr 1.22fr; gap: 32px; }
+    .kit-cards, .prices, .source-grid { display: grid; gap: 14px; }
+    .kit-cards { grid-template-columns: repeat(2, 1fr); }
+    .kit-card { border: 1px solid #334155; background: #0f172a; border-radius: 8px; padding: 20px; }
+    .kit-card strong { color: #a7f3d0; display: block; margin-bottom: 10px; }
+    .prices { grid-template-columns: repeat(4, 1fr); margin-top: 30px; }
+    .price { padding: 20px; display: flex; min-height: 280px; flex-direction: column; background: #f8fafc; }
+    .price b { font-size: 30px; display: block; margin: 10px 0 12px; }
+    .price p { flex: 1; color: var(--muted); }
+    .proof-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 34px; }
+    .source-grid { grid-template-columns: repeat(2, 1fr); margin-top: 18px; }
+    .source { padding: 14px; font-weight: 700; color: #0f172a; }
+    footer { background: #020617; color: #94a3b8; padding: 26px 0; font-size: 14px; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 18px; }
+    @media (max-width: 880px) {
+      nav { display: none; }
+      .hero-grid, .score-grid, .kit-grid, .proof-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 40px; }
+      h2 { font-size: 30px; }
+      .benefits, .prices, .kit-cards, .source-grid { grid-template-columns: 1fr; }
+      .result { position: static; }
+      footer .wrap { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="RailsReady home"><span class="mark">RR</span><span><strong>RailsReady</strong><span>Stablecoin launch kit</span></span></a>
+      <nav><a href="#scorecard">Scorecard</a><a href="#kit">Kit</a><a href="#pricing">Pricing</a><a href="#proof">Proof</a></nav>
+      <a class="button green" href="downloads/stablecoin-readiness-checklist.md">Checklist</a>
+    </div>
+  </header>
+  <main>
+    <section id="top" class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">For payment teams testing USDC / USDT rails</p>
+          <h1>Know if your stablecoin payment pilot is actually ready.</h1>
+          <p class="lead">RailsReady turns a stablecoin checkout, top-up, or off-ramp idea into a launch decision: responsibilities, provider evidence, reconciliation, edge cases, and compliant customer wording.</p>
+          <div class="actions"><a class="button" href="#scorecard">Run the scorecard</a><a class="button secondary" href="#pricing">See the product</a></div>
+          <div class="benefits">
+            <p class="benefit"><strong>No custody claims</strong>Provider-owned wallet and conversion boundaries first.</p>
+            <p class="benefit"><strong>No legal promises</strong>Decision support for teams and counsel, not legal advice.</p>
+            <p class="benefit"><strong>No hourly trap</strong>Repeatable templates, checklists, and launch gates.</p>
+          </div>
+        </div>
+        <div class="visual"><img src="assets/rails-map.png" alt="Stablecoin settlement flow map"></div>
+      </div>
+    </section>
+    <section id="scorecard">
+      <div class="wrap score-grid">
+        <div>
+          <div class="section-title"><p>Free scorecard</p><h2>Check seven launch gates in five minutes.</h2><p class="muted" style="margin-top:16px">Answer based on written evidence, not team confidence. Partial means someone can explain the topic, but the artifact is not ready for launch review.</p></div>
+          <div class="questions" id="questions"></div>
+        </div>
+        <aside class="result">
+          <div class="score-row"><div><p class="muted"><strong>Readiness</strong></p><p class="score tone-red" id="score">0</p></div><p class="benefit" style="padding:8px 10px">/100</p></div>
+          <div class="bar"><div class="fill" id="fill"></div></div>
+          <h3 id="resultLabel" class="tone-red">Do not launch yet</h3>
+          <p class="muted" id="resultBody" style="margin-top:12px">The missing gates create avoidable custody, compliance, reconciliation, or customer communication risk.</p>
+          <hr style="border:0;border-top:1px solid var(--line);margin:24px 0">
+          <h3>Top fixes</h3>
+          <ol id="fixes"></ol>
+          <div class="actions"><button class="button" id="copy">Copy summary</button><button class="button secondary" id="reset">Reset</button></div>
+        </aside>
+      </div>
+    </section>
+    <section id="kit" class="dark">
+      <div class="wrap kit-grid">
+        <div><p style="color:#a7f3d0;font-weight:700">The kit</p><h2 style="margin-top:10px">A launch binder for teams that cannot afford vague crypto risk.</h2><p class="muted" style="margin-top:16px">The first product is intentionally small: a checklist and document pack that helps a PSP, SaaS marketplace, game company, or cross-border merchant decide whether to pilot stablecoin payment rails with a provider.</p></div>
+        <div class="kit-cards">
+          <p class="kit-card"><strong>Compliance boundary map</strong>Define who owns KYC, KYT, wallet custody, conversion, fiat payout, sales claims, and support.</p>
+          <p class="kit-card"><strong>Top-up flow blueprint</strong>Specify payment intents, provider addresses, webhooks, exceptions, and ledger entries.</p>
+          <p class="kit-card"><strong>Provider DD checklist</strong>Compare providers with the same evidence checklist.</p>
+          <p class="kit-card"><strong>Pilot gate scorecard</strong>Turn enthusiasm into a launch/no-launch decision.</p>
+        </div>
+      </div>
+    </section>
+    <section id="pricing">
+      <div class="wrap">
+        <div class="section-title"><p>Monetization path</p><h2>Built to reach $100k without selling every hour.</h2><p class="muted" style="margin-top:16px">The math is plain: 200 Operator Pack sales at $499, 67 Blueprint licenses at $1,499, or a mixed ladder from checklist traffic to team licenses.</p></div>
+        <div class="prices">
+          <article class="price"><h3>Free checklist</h3><b>$0</b><p>Public readiness checklist for teams framing the project.</p><a class="button secondary" href="downloads/stablecoin-readiness-checklist.md">Download</a></article>
+          <article class="price"><h3>Launch Kit</h3><b>$149</b><p>Markdown templates for DD, flow design, reconciliation, and wording.</p><a class="button secondary" href="mailto:hello@railsready.tools?subject=RailsReady%20Launch%20Kit">Request kit</a></article>
+          <article class="price"><h3>Operator Pack</h3><b>$499</b><p>Filled sample for a top-up pilot and decision memo outline.</p><a class="button secondary" href="mailto:hello@railsready.tools?subject=RailsReady%20Operator%20Pack">Request invoice</a></article>
+          <article class="price"><h3>Blueprint License</h3><b>$1,499</b><p>Internal-use binder for a payment team avoiding hourly consulting.</p><a class="button secondary" href="mailto:hello@railsready.tools?subject=RailsReady%20Blueprint%20License">Discuss fit</a></article>
+        </div>
+      </div>
+    </section>
+    <section id="proof" style="border-top:1px solid var(--line)">
+      <div class="wrap proof-grid">
+        <div><p style="color:#047857;font-weight:700">Why now</p><h2 style="margin-top:10px">The rails are becoming real. The operating layer is still messy.</h2></div>
+        <div><p class="muted">Stripe documents stablecoin acceptance, Circle documents payins and payouts, Bridge offers orchestration, Visa is expanding stablecoin settlement, and HKMA has a live stablecoin issuer regime. Teams still need a practical launch gate before production.</p>
+          <div class="source-grid">
+            <a class="source" href="https://docs.stripe.com/payments/accept-stablecoin-payments">Stripe stablecoin payment docs</a>
+            <a class="source" href="https://developers.circle.com/circle-mint/concepts/stablecoin-payins-and-payouts">Circle payins and payouts docs</a>
+            <a class="source" href="https://www.bridge.xyz/product/orchestration">Bridge orchestration product</a>
+            <a class="source" href="https://www.hkma.gov.hk/eng/news-and-media/press-releases/2025/07/20250729-4/">HKMA stablecoin issuer regime</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap"><p>RailsReady is an operational toolkit. It is not legal, tax, financial, custody, or investment advice.</p><p>No wallet signing. No key handling. No personal data resale.</p></div></footer>
+  <script>
+    const questions = [{"id":"roles","title":"Provider and merchant responsibilities are documented","detail":"KYC/KYT, custody, conversion, fiat payout, ledger, support, and sales claims have named owners.","missing":"Draft a responsibility matrix before any customer-facing pilot."},{"id":"wallets","title":"Wallet custody and address assignment are explainable","detail":"The provider controls private keys, assigns addresses, and can show how each address maps to a customer or intent.","missing":"Ask the provider for custody, address reuse, and customer-address evidence."},{"id":"intent","title":"Payment intent lifecycle is designed","detail":"Each top-up or checkout has amount rules, expiry, supported chains, underpay, overpay, and duplicate handling.","missing":"Write the payment intent lifecycle and edge-case table."},{"id":"recon","title":"Reconciliation can join four records","detail":"Chain transaction, provider order, fiat payout reference, and internal ledger entry can be matched.","missing":"Create the four-way reconciliation model and required references."},{"id":"risk","title":"Risk exceptions have an operating playbook","detail":"KYT reject, wrong chain, quote expiry, refund, blocked payout, and customer dispute each have an owner.","missing":"Add an exception playbook with decision owners and customer wording."},{"id":"copy","title":"Customer copy avoids regulated-service claims","detail":"The UI does not imply your team provides custody, exchange, yield, issuer services, or legal certainty.","missing":"Run customer-facing copy through a compliance wording checklist."},{"id":"data","title":"Travel Rule and beneficiary data are scoped","detail":"Thresholds, sender and beneficiary fields, VASP data, retention, and privacy boundaries are known.","missing":"Map Travel Rule and beneficiary-data requirements by provider and jurisdiction."}];
+    const values = { yes: 14, partial: 8, no: 0 };
+    const labels = { yes: "Ready", partial: "Partial", no: "Missing" };
+    let answers = Object.fromEntries(questions.map((q) => [q.id, "no"]));
+    const qs = document.getElementById("questions");
+    function result(score) {
+      if (score >= 85) return ["Pilot-ready candidate", "You still need counsel and provider approval, but the operational shape is strong enough to plan a limited pilot.", "tone-green"];
+      if (score >= 65) return ["Controlled pilot after fixes", "There is a workable path, but one or two launch gates need documentation before customer funds move.", "tone-blue"];
+      if (score >= 45) return ["Design review needed", "The idea may be sound, but the current operating model is too vague for production exposure.", "tone-amber"];
+      return ["Do not launch yet", "The missing gates create avoidable custody, compliance, reconciliation, or customer communication risk.", "tone-red"];
+    }
+    function renderQuestions() {
+      qs.innerHTML = "";
+      questions.forEach((q) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = '<h3>' + q.title + '</h3><p class="muted">' + q.detail + '</p><div class="choices" role="radiogroup" aria-label="' + q.title + '"></div>';
+        const choices = card.querySelector(".choices");
+        ["yes", "partial", "no"].forEach((answer) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "choice" + (answers[q.id] === answer ? " active" : "");
+          b.textContent = labels[answer];
+          b.setAttribute("aria-pressed", answers[q.id] === answer ? "true" : "false");
+          b.onclick = () => { answers[q.id] = answer; renderQuestions(); renderResult(); };
+          choices.appendChild(b);
+        });
+        qs.appendChild(card);
+      });
+    }
+    function renderResult() {
+      const total = questions.reduce((sum, q) => sum + values[answers[q.id]], 0);
+      const score = Math.round((total / (questions.length * values.yes)) * 100);
+      const [label, body, tone] = result(score);
+      document.getElementById("score").textContent = String(score);
+      document.getElementById("score").className = "score " + tone;
+      document.getElementById("fill").style.width = score + "%";
+      document.getElementById("resultLabel").textContent = label;
+      document.getElementById("resultLabel").className = tone;
+      document.getElementById("resultBody").textContent = body;
+      const fixes = questions.filter((q) => answers[q.id] !== "yes").slice(0, 4);
+      document.getElementById("fixes").innerHTML = fixes.length ? fixes.map((q) => "<li>" + q.missing + "</li>").join("") : "<li>Package the pilot memo and send it for provider and legal review.</li>";
+      return { score, label, fixes };
+    }
+    document.getElementById("reset").onclick = () => { answers = Object.fromEntries(questions.map((q) => [q.id, "no"])); renderQuestions(); renderResult(); };
+    document.getElementById("copy").onclick = async () => {
+      const { score, label, fixes } = renderResult();
+      const summary = ["RailsReady score: " + score + "/100", "Status: " + label, "", "Top fixes:", ...fixes.map((q, i) => (i + 1) + ". " + q.missing)].join("\n");
+      await navigator.clipboard.writeText(summary);
+      document.getElementById("copy").textContent = "Copied";
+      setTimeout(() => document.getElementById("copy").textContent = "Copy summary", 1200);
+    };
+    renderQuestions();
+    renderResult();
+  </script>
+</body>
+</html>
