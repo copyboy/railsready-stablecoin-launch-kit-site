@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stablecoin Underpayment and Overpayment Handling | RailsReady</title>
+  <meta name="description" content="A stablecoin amount-mismatch playbook for underpayments, overpayments, dust, quote expiry, and manual remediation." />
+  <link rel="canonical" href="https://copyboy.github.io/railsready-stablecoin-launch-kit-site/stablecoin-underpayment-overpayment-handling.html" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can stablecoin checkout require exact payment amounts?","acceptedAnswer":{"@type":"Answer","text":"It can require exact amounts, but the operating model still needs to handle real customers sending too little, too much, late, or more than once."}},{"@type":"Question","name":"Should overpayments be automatically credited?","acceptedAnswer":{"@type":"Answer","text":"Only when product, finance, compliance, and provider rules agree. Many teams route overpayments to review first."}}]}</script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --ink: #0f172a;
+      --muted: #485569;
+      --line: #dbe3ee;
+      --panel: #ffffff;
+      --soft: #f1f5f9;
+      --green: #059669;
+      --green-soft: #ecfdf5;
+      --blue: #2563eb;
+      --amber: #b45309;
+      --red: #b91c1c;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255,255,255,.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .mark { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 8px; background: #020617; color: white; font-weight: 700; }
+    .brand strong, .brand span { display: block; }
+    .brand span { color: #64748b; font-size: 13px; }
+    .brand .mark { display: grid; color: white; font-size: 16px; }
+    nav { display: flex; gap: 26px; color: #334155; font-size: 14px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 42px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      padding: 0 18px;
+      font-weight: 700;
+      background: #020617;
+      color: white;
+      cursor: pointer;
+    }
+    .button.secondary { background: white; color: #0f172a; border-color: #cbd5e1; }
+    .button.green { background: var(--green); }
+    .hero { padding: 56px 0; border-bottom: 1px solid var(--line); }
+    .hero-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: 36px; align-items: center; }
+    .eyebrow {
+      display: inline-flex;
+      border: 1px solid #a7f3d0;
+      background: var(--green-soft);
+      color: #047857;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 700;
+      margin-bottom: 26px;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 46px; line-height: 1.08; max-width: 650px; }
+    .lead { margin-top: 22px; color: var(--muted); font-size: 18px; line-height: 1.8; max-width: 650px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 34px; }
+    .benefit, .card, .price, .source {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+    }
+    .benefit { padding: 16px; color: #334155; }
+    .benefit strong { display: block; color: var(--ink); margin-bottom: 4px; }
+    .visual { border: 1px solid var(--line); background: white; border-radius: 8px; padding: 12px; box-shadow: 0 1px 5px rgba(15, 23, 42, .09); }
+    .visual img { width: 100%; height: auto; display: block; border-radius: 6px; }
+    section { padding: 56px 0; }
+    .section-title { max-width: 680px; }
+    .section-title p:first-child { color: #047857; font-weight: 700; margin-bottom: 10px; }
+    h2 { font-size: 34px; line-height: 1.16; }
+    .muted { color: var(--muted); line-height: 1.8; }
+    .score-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 32px; align-items: start; }
+    .questions { margin-top: 28px; display: grid; gap: 14px; }
+    .card { background: var(--soft); padding: 18px; }
+    .card h3 { font-size: 17px; line-height: 1.35; margin-bottom: 10px; }
+    .choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 18px; }
+    .choice {
+      height: 42px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: #334155;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .choice.active { background: #020617; border-color: #020617; color: white; }
+    .result { position: sticky; top: 84px; border: 1px solid var(--line); background: white; border-radius: 8px; padding: 22px; box-shadow: 0 1px 5px rgba(15, 23, 42, .08); }
+    .score-row { display: flex; justify-content: space-between; align-items: start; }
+    .score { font-size: 54px; font-weight: 800; margin-top: 4px; }
+    .bar { height: 10px; overflow: hidden; border-radius: 8px; background: #e2e8f0; margin: 16px 0 24px; }
+    .fill { height: 100%; width: 0; background: var(--green); border-radius: 8px; transition: width 180ms ease; }
+    .tone-red { color: var(--red); }
+    .tone-amber { color: var(--amber); }
+    .tone-blue { color: var(--blue); }
+    .tone-green { color: #047857; }
+    ol { margin: 12px 0 0; padding-left: 20px; color: var(--muted); line-height: 1.8; }
+    .dark { background: #020617; color: white; }
+    .dark .muted { color: #cbd5e1; }
+    .kit-grid { display: grid; grid-template-columns: .78fr 1.22fr; gap: 32px; }
+    .kit-cards, .prices, .source-grid { display: grid; gap: 14px; }
+    .kit-cards { grid-template-columns: repeat(2, 1fr); }
+    .kit-card { border: 1px solid #334155; background: #0f172a; border-radius: 8px; padding: 20px; }
+    .kit-card strong { color: #a7f3d0; display: block; margin-bottom: 10px; }
+    .prices { grid-template-columns: repeat(4, 1fr); margin-top: 30px; }
+    .guides { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 28px; }
+    .guide { border: 1px solid var(--line); background: white; border-radius: 8px; padding: 18px; }
+    .guide strong { display: block; font-size: 18px; margin-bottom: 10px; }
+    .price { padding: 20px; display: flex; min-height: 280px; flex-direction: column; background: #f8fafc; }
+    .price b { font-size: 30px; display: block; margin: 10px 0 12px; }
+    .price p { flex: 1; color: var(--muted); }
+    .proof-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 34px; }
+    .source-grid { grid-template-columns: repeat(2, 1fr); margin-top: 18px; }
+    .source { padding: 14px; font-weight: 700; color: #0f172a; }
+    footer { background: #020617; color: #94a3b8; padding: 26px 0; font-size: 14px; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 18px; }
+    @media (max-width: 880px) {
+      nav { display: none; }
+      .hero-grid, .score-grid, .kit-grid, .proof-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 40px; }
+      h2 { font-size: 30px; }
+      .benefits, .prices, .guides, .kit-cards, .source-grid { grid-template-columns: 1fr; }
+      .result { position: static; }
+      footer .wrap { flex-direction: column; }
+    }
+    @media (max-width: 520px) {
+      .wrap { padding: 0 16px; }
+      .nav { gap: 10px; }
+      .brand { min-width: 0; gap: 10px; }
+      .mark { width: 36px; height: 36px; flex: 0 0 36px; }
+      .brand strong { font-size: 16px; }
+      .brand > span > span { display: none; }
+      .button.green { height: 42px; padding: 0 14px; }
+    }
+  
+    .article { max-width: 820px; }
+    .article h1 { max-width: 820px; }
+    .article h2 { margin-top: 34px; font-size: 26px; }
+    .article p, .article li { color: var(--muted); font-size: 17px; line-height: 1.85; }
+    .article ul, .article ol { margin-top: 14px; }
+    .article-cta { margin-top: 34px; border: 1px solid var(--line); border-radius: 8px; background: white; padding: 22px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="index.html" aria-label="RailsReady home"><span class="mark">RR</span><span><strong>RailsReady</strong><span>Stablecoin launch kit</span></span></a>
+      <nav><a href="index.html#scorecard">Scorecard</a><a href="index.html#guides">Guides</a><a href="index.html#pricing">Pricing</a></nav>
+      <a class="button green" href="downloads/stablecoin-readiness-checklist.md">Checklist</a>
+    </div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="wrap article">
+        <p class="eyebrow">Stablecoin payment launch playbook</p>
+        <h1>Stablecoin underpayment and overpayment handling</h1>
+        <p class="lead">Stablecoin payments often look simple until the amount does not match. Customers can send too little, too much, duplicate a transfer, pay after quote expiry, or include dust amounts that break exact-match reconciliation. The product, finance, provider, and support teams need one shared state model.</p>
+      </div>
+    </section>
+    <section>
+      <article class="wrap article">
+        
+      <h2>Amount mismatch states</h2>
+      <p>Do not reduce every mismatch to failed or paid. A useful state model separates underpaid, overpaid, duplicate, late, dust, pending review, manually credited, refunded, and rejected outcomes. Each state needs an owner and a ledger rule.</p>
+      <h2>Rules to document</h2>
+      <ul>
+        <li>Minimum accepted amount and tolerance threshold.</li>
+        <li>Whether the customer can top up the difference after an underpayment.</li>
+        <li>Whether overpayments are refunded, credited, or held for review.</li>
+        <li>How quote expiry affects detected transfers.</li>
+        <li>How duplicate tx hashes or reused addresses are handled.</li>
+      </ul>
+      <h2>Finance impact</h2>
+      <p>An overpayment is not free revenue, and an underpayment is not always an automatic rejection. Finance needs to know whether the provider settles the detected amount, the expected amount, or a net converted amount after fees and FX spread.</p>
+      <h2>Support scripts</h2>
+      <ol>
+        <li>Tell the customer what was expected and what was detected.</li>
+        <li>Explain whether additional payment, refund, or review is available.</li>
+        <li>Avoid promising instant credit while provider review is open.</li>
+        <li>Give a ticket reference and next review window.</li>
+      </ol>
+      <h2>Launch review test</h2>
+      <p>Before launch, demonstrate one underpayment, one overpayment, one duplicate transfer, and one late payment through the provider webhook, internal ledger, and support flow.</p>
+    
+        <div class="article-cta">
+          <h2 style="margin-top:0">Run the seven-gate readiness check</h2>
+          <p>Use the free scorecard to turn this guide into a launch/no-launch decision for your own pilot.</p>
+          <div class="actions"><a class="button" href="index.html#scorecard">Run scorecard</a><a class="button secondary" href="downloads/stablecoin-readiness-checklist.md">Download checklist</a></div>
+        </div>
+      </article>
+    </section>
+  </main>
+  <footer><div class="wrap"><p>RailsReady is an operational toolkit. It is not legal, tax, financial, custody, or investment advice.</p><p>No wallet signing. No key handling. No personal data resale.</p></div></footer>
+</body>
+</html>
